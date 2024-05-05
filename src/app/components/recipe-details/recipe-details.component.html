@@ -1,0 +1,141 @@
+<app-blank
+  pageName="{{recipe.product.name}} Reçete Detay Bilgisi"
+  [routes]="['Reçeteler',recipe.product.name + 'Reçete Detay Bilgisi']"
+>
+  <app-section sectionTitle="{{ recipe.product.name }} Reçete Detayı">
+    <div class="form-group mt-2 row">
+
+        @if (!isUpdateformActive) {
+ <!-- CreateForm -->
+      <div class="col-9">
+        <form #createForm="ngForm" autocomplete="off" (ngSubmit)="create(createForm)">
+          <div class="row">
+            <div class="col-4 text-center">
+              <label>Ürün</label>
+              <select
+                class="form-control"
+                [(ngModel)]="createModel.productId"
+                name="productId"
+                required
+              >
+                @for (product of products; track product) {
+                <option [value]="product.id">
+                  {{ product.name }}
+                </option>
+                }
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+            <div class="col-4">
+                <label>Adet</label>
+                <input class="form-control" name="quantity" [(ngModel)]="createModel.quantity" required>
+                <div class="invalid-feedback"></div>
+            </div>
+            
+            <div class="col-4 ">
+                <label>İşlemler</label>
+                <br>
+                <button type="submit" class="btn btn-success">Ekle</button>
+            </div>
+          </div>
+        </form>
+      </div>
+        }
+       
+        @else {
+              <!-- UpdateForm -->
+      <div class="col-9">
+        <form #updateForm="ngForm" autocomplete="off" (ngSubmit)="update(updateForm)">
+          <div class="row">
+            <div class="col-4 text-center">
+              <label>Ürün</label>
+              <select
+                class="form-control"
+                [(ngModel)]="updateModel.productId"
+                name="updateProductId"
+                required
+              >
+                @for (product of products; track product) {
+                <option [value]="product.id">
+                  {{ product.name }}
+                </option>
+                }
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+            <div class="col-4">
+                <label>Adet</label>
+                <input class="form-control" name="updateQuantity" [(ngModel)]="updateModel.quantity" required>
+                <div class="invalid-feedback"></div>
+            </div>
+            
+            <div class="col-4">
+                <label>İşlemler</label>
+                <br>
+                <button type="submit" class="btn btn-success me-1">Güncelle</button>
+                <button (click)="isUpdateformActive=false" type="button" class="btn btn-danger">Vazgeç</button>
+            </div>
+          </div>
+        </form>
+      </div>
+        }
+
+      
+      <div class="col-3">
+        <input
+          [(ngModel)]="search"
+          type="search"
+          class="form-control"
+          placeholder="Aranacak değer giriniz"
+        />
+      </div>
+    </div>
+
+    <div class="form-group mt-2">
+      <table class="table table-hover">
+        <thead class="text-center">
+          <tr>
+            <th>#</th>
+            <th>Ürün Adı</th>
+            <th>Adet</th>
+            <th>İşlemler</th>
+          </tr>
+        </thead>
+        <tbody class="text-center tbody-text">
+          @for (recipeDetail of recipe.details|recipeDetail: search; track
+          recipeDetail) {
+          <tr>
+            <td>{{ $index + 1 }}</td>
+            <td>{{ recipeDetail.product.name }}</td>
+            <td>{{ recipeDetail.quantity }}</td>
+            <td>
+                <button
+                (click)="get(recipeDetail)"
+                class="btn btn-outline-primary btn-sm me-1"
+              >
+                <i class="fa-solid fa-edit"></i>
+              </button>
+
+             @if (!isUpdateformActive) {
+              
+              <button
+                (click)="deleteById(recipeDetail)"
+                class="btn btn-outline-danger btn-sm"
+              >
+                <i class="fa-solid fa-trash"></i>
+              </button>
+             }
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  
+  </app-section>
+ <div class="row ms-1">
+    <div class="col-3">
+        <button routerLink="/recipes" class="btn btn-primary w-50">Geri</button>
+    </div>
+ </div>
+</app-blank>
